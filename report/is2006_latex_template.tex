@@ -51,7 +51,7 @@ to native clustering capabilities and runtime interoperability.\
 We review the current approaches and patterns forwarded by 
 cluster management solutions to orchestrate distributed container clusters under Docker,\
 and subsequently contribute a comparative analysis of two varying 
-frameworks in this space,  Kubernetes and Swarm.
+frameworks in this space, Kubernetes and Swarm.
 
 
 \end{abstract}
@@ -101,18 +101,53 @@ Consequently, Docker have implemented this trio of orchestration tools in a gene
 providing ``a standard interface to service providers so that they can almost be used as plug-and-play solutions" on top of the Docker platform \citep{holla}.
 \par
 Backed by both the industry and community, Docker is now presented as a more mature and production-ready
-platform, however it should be mentioned that there yet exists no
-formal topology for a fully, or partly, Dockerised cloud \citep{Claus}. In 
-turn, there is no widely accepted solution for managing distributed 
-Docker-based clusters.\ This is unsurprising given that 
-practitioners and industry experts have noted that frameworks in this space
-vary greatly in terms of capability, architecture and target cluster proportion
-\citep{goasguen, holla}.
+platform. Notwithstanding this impressive growth, there yet exists no
+formal topology for a fully, or partly, Dockerised cloud \citep{Claus}.\ Similarly,
+so for there is no widely accepted solution for managing 
+Docker container clusters.\
+ This paper considers how primary cluster management activities are achievable on top of the Docker platform.
+In doing so we review the interoperability of the Docker runtime and format with existing 
+container management solutions. Subsequently, we forward a comparative study
+on two contrasting solutions, Kubernetes and Docker Swarm. 
 \par
-This paper presents TODO. The remainder of this paper is structured as follows. TODO
+The remainder of this paper is structured as follows. In
+section two we overview service orchestration, discovery and configuration in Docker clusters. Following this, section three details our
+reviews of Docker Swarm and Kubernetes. Finally, in section four we conclude this paper.
 
 
-\section{Study Design}
+\section{Docker Cluster Management}
+Practitioners and industry experts note that cluster management frameworks supporting Docker
+vary greatly in terms of capability, architecture and target cluster proportion
+\citep{goasguen, holla}. This is unsurprising when we consider that all infrastructures 
+are not subject to same orchestration requirements and software release cycles.
+For instance, slow moving infrastructures can be characterised as having infrequent application deployments,
+ hard-coded service configurations and rare service failures which may not have an urgent impact. In contrast, more fast moving infrastructures feature continuous deployments and strong automation in terms of service configuration and recovery. 
+ % maybe add more of an intro here
+
+\subsection{Service orchestration}
+Central to cloud cluster management is the ability to elastically provision and tear down clusters. Many cloud providers have introduced their own service orchestration tools such as CloudFormation from AWS and Heat by OpenStack \citep{Dudouet}. 
+On a high-level, these tools simply define a cluster template which can be later orchestrated with possibly extended configurations. As previously mentioned, the native Docker orchestration tools support similar features that can clusterise multi-host containers. Docker Compose conceptually defines a similar template to that of Amazon's CloudFormation and allows one to perform orchestration tasks such as provisioning, destroying and scaling on per container basis.
+\par
+\citet{Claus} describe container-based clusters as consisting of several hosts which are ``virtual servers on hypervisors or possibly bare-metal servers", each of which typically runs several containers that are responsible for scheduling, load balancing and serving an application or service. Meaning containers can be distributed across one or more host machines wherein these hosts might be virtual servers running other services that must also be orchestrated.
+\par
+Slow moving infrastructures may not be availing of their provider's orchestration tools as doing so is simply not required. Clusters themselves are manually defined once and the scaling of nodes can be introduced during deployments or at scheduled downtime. Nevertheless, Docker Compose supports this manual workflow. Conversely, fast moving infrastructures profit from their provider's orchestration tools, leveraging them to automate tasks around cluster management.\ As discussed previously, Swarm is a native Docker clustering tool for containers which pools Docker engines together into a single virtual host. In conjunction with Docker Compose, it facilitates for transparent orchestration across container clusters. \citep{holla}.
+\par
+Cluster management frameworks aim to abstract and automate service orchestration activities such as provisioning, scaling, task scheduling, resource utilisation management and failover recovery. Some cloud providers have implemented such frameworks which sit on top of Swarm. For example, Amazon's EC2 Container Service (ECS) is one that uses a shared-state scheduling model to execute tasks on containerised EC2 instances via containers. Each host instance has a preinstalled ECS agent which allows clusterised containers communicate together and with the ECS console. Consequently, via scheduled tasks, ECS clusters can be transparently and dynamically orchestrated.
+\par
+Stand-alone Swarm or ECS may be fitting orchestration solutions for fast moving infrastructures, however larger-scale clouds that host hundreds or thousands of containers require high-level cluster management platforms such as Apache Mesos and Kubernetes. The former abstracts ``distributed hardware resources into
+a single pool of resources" and can provide similar cluster management facilities to ECS when integrated with scheduling and service management tools such as Marathon. The later is a higher-level platform specifically designed for managing containerised applications across multiple hosts including mechanisms for service deployment, scaling and maintenance.
+
+\subsection{Service discovery and configuration}
+
+Service discovery and configuration management are central cluster management concepts in distributed systems and microservices-based architectures. Both of which are argued to overlap in nature. Service discovery can be described as an approach to achieve ``dynamic and automatic software system composition, configuration and adaptation" \citep{Yang}. Generally, service discovery implementations accomplish this by allowing application components/services discover information or configurations about their current and  neighbouring environments through a distributed key-value store.
+\par
+Whether operating under a fast or slow moving infrastructure, requiring a service discovery solution is generally related to having a service-orientated  architecture style. The more distributed a system becomes, the more regularly do services require information about their own and neighbouring environments. The tooling around service discovery ranges in terms of complexity and provided features. DNS (Domain Name Systems) is a well-known and commonly understood standard which allows us ``associate a name with the IP address of one or machines" where the name becomes an ``entry point to the IP address of the host running that service" \citep{Newman}. More advanced tools like Consul and Apache Zookeeper                                                                                             support both configuration management and service discovery. The former is designed specifically for service discovery and can use service health checking features to route traffic away from unhealthy nodes. The later is used for wider variety of cases such ``configuration management, synchronizing data between services, leader election, message queues and as a naming service" \citep{Newman}.
+\par 
+Container-based service discovery involves the ability to dynamically register and discover multi-host containers among their peers. \citet{holla} poses two techniques to accomplish discovery in Docker; integrating Swarm backend discovery tools or using default Docker features like names and links. Docker Swarm implements a hosted discovery service which uses generated tokens to discover cluster nodes. Being primarily concerned with orchestration, Swarm does not currently support dynamic service registration and configuration. However, to dynamically configure and manage the services in your containers one can use a discovery backend with Swarm such as Etcd, Consul or Zookeeper. 
+\par
+As previously highlighted, Docker Compose provides a mechanism to link named containers on the same host. This is accomplished by ``inserting the first container's IP address in /etc/hosts when starting the second container". Importantly, the IP address of a container living on a different host ``is not known by the docker daemon running in the current host". The ambassador container pattern achieves cross-host container linking between provider and consumer containers by dynamically configuring network connections through respective intermediate ambassador containers \citep{holla}.
+
+\section{Study: Cluster Management Frameworks}
 \lipsum[1]
 
 \subsection{Docker Swarm}
@@ -140,12 +175,7 @@ To support more complex scheduling mechanism swarm also provides filtering to ef
 \subsubsection{Not yet implemented}
 Swarm does not yet support (as of version 1.0) host rebalancing - where a host fails and needs to be rescheduled on another node. This is in the roadmap and should be released alongside Docker version 1.10 release [https://github.com/docker/swarm/wiki/0.6.0-Milestone-Project-Page].
 
-
 \subsection{Kubernetes}
-\lipsum[1]
-
-
-\section{Discussion}
 \lipsum[1]
 
 \section{Conclusions}
