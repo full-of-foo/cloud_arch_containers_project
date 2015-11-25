@@ -111,12 +111,12 @@ container management solutions. Subsequently, we forward a comparative study
 on two contrasting solutions, Kubernetes and Docker Swarm. 
 \par
 The remainder of this paper is structured as follows. In
-section two we overview service orchestration, discovery and configuration in Docker clusters. Following this, section three details our
-reviews of Docker Swarm and Kubernetes. Finally, in section four we conclude this paper.
+section two we overview service orchestration, discovery and configuration in Docker clusters. Following this, section three and four detail our
+reviews of Docker Swarm and Kubernetes respectively. Finally, in section five we conclude this paper.
 
 
 \section{Docker Cluster Management}
-Practitioners and industry experts note that cluster management frameworks supporting Docker
+Practitioners and industry experts note that cluster management tooling supporting Docker
 vary greatly in terms of capability, architecture and target cluster proportion
 \citep{goasguen, holla}. This is unsurprising when we consider that all infrastructures 
 are not subject to same orchestration requirements and software release cycles.
@@ -147,23 +147,24 @@ Container-based service discovery involves the ability to dynamically register a
 \par
 As previously highlighted, Docker Compose provides a mechanism to link named containers on the same host. This is accomplished by ``inserting the first container's IP address in /etc/hosts when starting the second container". Importantly, the IP address of a container living on a different host ``is not known by the docker daemon running in the current host". The ambassador container pattern achieves cross-host container linking between provider and consumer containers by dynamically configuring network connections through respective intermediate ambassador containers \citep{holla}.
 
-\section{Study: Cluster Management Frameworks}
-\lipsum[1]
-
-\subsection{Docker Swarm}
-A part of the docker's native ecosystem, swarm is docker's production-ready cluster management and orchestration tool. It allows for transparent scaling of docker containers across multiple hosts and because it serves the same docker daemon API it can be used seamlessly with any docker compatible tools (like Docker Compose, Dokky, Jenkins and others).
-Swarm will run a swarm agent daemon in each node of the cluster and coordinate them using a pluggable discovery service back-end (which maintains a list of nodes in your cluster) and a swarm manager (that will actually control the whole cluster). The connection between the manager and agent nodes is made through a secure tcp connection (by means of TSL certificates). In previous versions of swarm the manager itself was the single point of failure of the cluster as there was no fail-over available. In the latest release however, version 1.0, a replication service for the manager has been developed whereby several manager instances will compete for leadership, making swarm a highly available solution.
-\subsubsection{Networking}
-Making use of the new networking feature of docker (as of version 1.9), the whole cluster is interconnected by a virtual network that can be manually configured to connect any nodes in private/global scopes. The overlay network driver is used by default which results in all nodes of a cluster to be on the same virtual network (and so able to intercommunicate out-of-the-box). This is a very powerful feature for multi-host configuration that is now supported natively by docker.
-\subsubsection{Scheduling strategies}
-When a new container is to be created, swarm uses one of three scheduling algorithms for determining in which node the image will be deployed to and subsequently ran.
+\section{Study: Docker Swarm}
+Now included as part of the Docker platform, Swarm is Docker's production-ready cluster management tool. It allows for the transparent scaling of containers across multiple hosts and as it serves the Docker daemon API it can be used seamlessly on top of any Docker supported tools (like Docker Compose, Dokky, Jenkins and others).
+Swarm will run an agent daemon in each node of the cluster and coordinate them using a pluggable discovery service back-end (which maintains a list of nodes in your cluster) and a swarm manager (that will actually control the whole cluster). 
+\par
+The connection between the manager and agent nodes is made through a secure tcp connection (by means of TSL certificates). 
+In previous versions of Swarm, the manager itself was the single point of failure of the cluster as there was no fail-over available. 
+In the latest release, version 1.0, a replication service for the manager has been developed whereby several manager instances will compete for leadership, making Swarm a highly available solution.
+\subsection{Networking}
+Making use of the new networking feature of Docker (as of version 1.9), the whole cluster is interconnected by a virtual network that can be manually configured to connect any nodes in private/global scopes. The overlay network driver is used by default which results in all nodes of a cluster to be on the same virtual network (and so able to intercommunicate out-of-the-box). This is a very powerful feature for multi-host configuration that is now supported natively by Docker.
+\subsection{Scheduling Strategies}
+Upon creating container instances, Swarm can use one of three scheduling algorithms to determine which node the container will be deployed to and ran on.
 \begin{itemize}
-\item \textbf{Spread} as the name says will try to evenly spread the containers in as many nodes as possible, taking into account the available CPU and RAM and also the number of running containers. This is the default algorithm.
-\item \textbf{Binpack} also considers the node's available resources but unlike spread, it will try to schedule as many containers on the same node as possible. This is the ideal algorithm for maximizing the number of running containers on the cluster, minimizing resource fragmentation.
+\item \textbf{Spread} attempts to evenly spread the containers in as many nodes as possible, taking into account the available CPU and RAM and also the number of running containers. This is the default algorithm.
+\item \textbf{Binpack} also considers the node's available resources but, unlike spread, will try to schedule as many containers on the same node as possible. This is the ideal algorithm for maximizing the number of running containers on the cluster, minimizing resource fragmentation.
 \item \textbf{Random} simply assigns a new container to a node in random fashion, not taking into consideration any other measurements.
 \end{itemize}
-\subsubsection{Filtering}
-To support more complex scheduling mechanism swarm also provides filtering to effectively subset the available nodes based on a given criteria.
+\subsection{Filtered Scheduling}
+To support more complex scheduling mechanism Swarm also provides filtering to effectively subset the available nodes based on a given criteria.
 \begin{itemize}
 \item \textbf{Constraint}* uses key-value pairs that are set at node level and are used as labels to identify characteristics of the node. This filter can be used on container creation by the user to select only nodes with a particular feature (key-value pair). This approach has several practical use cases such as tagging nodes on their physical location (region=eu-ireland or region=us-west), the running environment (environment=production or environment=test), hardware characteristics (storage=ssd or gpu=nvidia) or any other logical partitioning.
 \item \textbf{Affinity}* is used to create an "attraction" between containers (to run next to another container), images (to run on nodes that already have an image pulled) or a label (the label is created upon a containers creation).
@@ -171,11 +172,11 @@ To support more complex scheduling mechanism swarm also provides filtering to ef
 \item \textbf{Dependency} will try to honour volume, network stack or link dependencies and schedule containers only on nodes that match.
 \item \textbf{Health} will prevent scheduling of new containers on unhealthy nodes.
 \end{itemize}
-\textbf{*} Both constraint and affinity filters are hard enforced, which means that if the affinity or constraint is not met, the container will not be started. The user has an option to create the affinity or constraint in soft mode, which will make the scheduler disregard the filter and use the configured strategy in case the affinity or constraint is not met.
-\subsubsection{Not yet implemented}
-Swarm does not yet support (as of version 1.0) host rebalancing - where a host fails and needs to be rescheduled on another node. This is in the roadmap and should be released alongside Docker version 1.10 release [https://github.com/docker/swarm/wiki/0.6.0-Milestone-Project-Page].
+\textbf{*}Both constraint and affinity filters are hard enforced, which means that if the affinity or constraint is not met, the container will not be started. The user has an option to create the affinity or constraint in soft mode, which will make the scheduler disregard the filter and use the configured strategy in case the affinity or constraint is not met.
+\subsection{Not yet implemented}
+As of version 1.0, Swarm does not yet support host rebalancing - where a host fails and needs to be rescheduled on another node. Nevertheless, this is noted on the project roadmap and is destined to be released alongside Docker the 1.10 release \citep{Vieux}.
 
-\subsection{Kubernetes}
+\section{Study: Kubernetes}
 \lipsum[1]
 
 \section{Conclusions}
