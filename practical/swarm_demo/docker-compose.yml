@@ -1,6 +1,6 @@
 www:
   #build: www
-  image: magrossi/trainingwheels
+  image: magrossi/ca674_demo_app
   expose:
     - "5000"
   links:
