@@ -21,7 +21,7 @@ wget https://storage.googleapis.com/kubernetes-release/release/v0.19.3/bin/linux
   kubectl get services && \
   kubectl create -f ./kube/redis-slave-controller.yaml && \
   kubectl get rc && \
-  kubectl get pods && \
+  kubectl get pods #&& \
   kubectl create -f ./kube/frontend-service.yaml && \
   kubectl get services && \
   kubectl create -f ./kube/frontend-controller.yaml && \

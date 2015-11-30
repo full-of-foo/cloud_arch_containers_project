@@ -6,11 +6,11 @@ Bootstrapping
 ---
 1. Download and install Docker Toolbox v1.9.0c (https://github.com/docker/toolbox/releases)
 
-2. Create a controller machine, `docker-machine status default || docker-machine create -d virtualbox default && sleep 1`
+2. Create a controller machine, `docker-machine status default || docker-machine create -d virtualbox --virtualbox-memory 4096 --virtualbox-cpu-count 2 default && sleep 1`
 
 3. Point your Docker engine to the default controller machine, `eval $(docker-machine env default)`
 
-4. Get the Kubernetes cluster installed and running, `docker-compose up -d`
+4. Get the Kubernetes cluster installed and running, `docker-compose rm -f kubelet && docker-compose up --force-recreate -d`
 
 5. Install the pods
 ```

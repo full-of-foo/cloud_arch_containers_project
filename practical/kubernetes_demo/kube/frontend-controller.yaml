@@ -25,10 +25,6 @@ spec:
       containers:
       - name: trainingwheels
         image: magrossi/trainingwheels
-        resources:
-          requests:
-            cpu: 200m
-            memory: 200Mi
         env:
         - name: GET_HOSTS_FROM
           value: dns
