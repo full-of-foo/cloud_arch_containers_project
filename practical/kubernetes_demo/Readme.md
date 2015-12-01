@@ -6,15 +6,27 @@ Bootstrapping
 ---
 1. Download and install Docker Toolbox v1.9.0c (https://github.com/docker/toolbox/releases)
 
-2. Create a controller machine, `docker-machine status default || docker-machine create -d virtualbox --virtualbox-memory 4096 --virtualbox-cpu-count 2 default && sleep 1`
+2. Create a controller machine, `docker-machine status kube-host || docker-machine create -d virtualbox --virtualbox-memory 4096 --virtualbox-cpu-count 2 kube-host && sleep 1`
 
-3. Point your Docker engine to the default controller machine, `eval $(docker-machine env default)`
+3. Point your Docker engine to the kube-host controller machine, `eval $(docker-machine env kube-host)`
 
-4. Get the Kubernetes cluster installed and running, `docker-compose rm -f kubelet && docker-compose up --force-recreate -d`
-
+4. Get the Kubernetes cluster installed and running
+```
+docker stop $(docker ps -a -q) && \ # uncomment to stop all containers
+docker rm -f $(docker ps -a -q) && \ # uncomment to clear all containers
+docker-compose up --force-recreate -d
+```
 5. Install the pods
 ```
-docker-machine scp -r kube/ default:./kube && \
-docker-machine scp install.sh default:./install.sh && \
-docker-machine ssh default "chmod +x ./install.sh && sh ./install.sh"
+docker-machine ssh kube-host "rm -fr ./kube" && \
+docker-machine scp -r kube/ kube-host:./kube && \
+docker-machine scp install.sh kube-host:./install.sh && \
+docker-machine ssh kube-host "chmod +x ./install.sh && sh ./install.sh"
 ```
+6. Wait for all the pods to be running, ``
+
+7. Visit the application
+```
+port=`docker-machine ssh kube-host "kubectl get -o yaml service/frontend" | grep -o "nodePort: [0-9]*" | tr -d 'nodePort: '`
+open http://$(docker-machine ip kube-host):$port
+``` 
