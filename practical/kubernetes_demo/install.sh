@@ -5,8 +5,10 @@
 #
 # USAGE: chmod +x ./install.sh && ./install.sh
 #
-# DESCRIPTION: TODO
-
+# DESCRIPTION: Install script to be ran on a kube-host machine instance. This machines
+#   conceptually acts a 'cluster' management machine from which cluster orchestration
+#   is done. In this local case, we install the cluster onto the same host machine.
+#
 #===================================================================================
 
 wget https://storage.googleapis.com/kubernetes-release/release/v1.0.1/bin/linux/amd64/kubectl && \
@@ -17,10 +19,8 @@ wget https://storage.googleapis.com/kubernetes-release/release/v1.0.1/bin/linux/
   kubectl create -f ./kube/redis-master-controller.yaml && \
   kubectl get rc && \
   kubectl get pods && \
-  #redis_port=`kubectl get -o yaml service/redis-master | grep -o "nodePort: [0-9]*" | tr -d 'nodePort: '` && \
   kubectl create -f ./kube/frontend-service.yaml && \
   kubectl get services && \
-  #sed -i "s/EXPOSED_PORT/$redis_port/" kube/frontend-controller.yaml && \
   kubectl create -f ./kube/frontend-controller.yaml && \
   kubectl get rc && \
   kubectl get pods -l tier
