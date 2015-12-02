@@ -1,6 +1,6 @@
 Demo: Kubernetes Clustering
 ===
-TODO - describe application (what it does and what it aims to demonstrate)
+This work aims to demonstrate Kubernetes' service orchestration and discovery features.
 
 Bootstrapping
 ---
@@ -12,8 +12,8 @@ Bootstrapping
 
 4. Get the Kubernetes cluster installed and running
 ```
-docker stop $(docker ps -a -q) && \ # uncomment to stop all containers
-docker rm -f $(docker ps -a -q) && \ # uncomment to clear all containers
+docker stop $(docker ps -aq) && \
+docker rm -f $(docker ps -aq) && \
 docker-compose up --force-recreate -d
 ```
 5. Install the pods
