@@ -1,0 +1,8 @@
+www:
+  #build: www
+  image: magrossi/ca674_demo_app
+  ports:
+    - "5000"
+  net: "ca674_net"
+  user: nobody
+  mem_limit: 200000000

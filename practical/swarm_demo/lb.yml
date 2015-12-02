@@ -1,0 +1,7 @@
+lb:
+  image: jpetazzo/hamba
+  #Format is: command 80 <IP1> <PORT1> <IP2> <PORT2> <IP3> <PORT3> ...
+  command: 80 192.168.99.103 32772 192.168.99.102 32769 192.168.99.104 32769 192.168.99.103 32771
+  mem_limit: 50000000
+  ports:
+    - "80:80"
