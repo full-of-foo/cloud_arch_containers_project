@@ -7,8 +7,8 @@ metadata:
     role: master
     tier: backend
 spec:
+  type: NodePort
   ports:
-    # the port that this service should serve on
   - port: 6379
     targetPort: 6379
   selector:

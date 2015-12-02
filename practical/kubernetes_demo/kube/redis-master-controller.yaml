@@ -28,5 +28,8 @@ spec:
       containers:
       - name: master
         image: redis
+        env:
+        - name: GET_HOSTS_FROM
+          value: env
         ports:
         - containerPort: 6379
