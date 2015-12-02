@@ -22,8 +22,10 @@ wget https://storage.googleapis.com/kubernetes-release/release/v0.19.3/bin/linux
   kubectl create -f ./kube/redis-slave-controller.yaml && \
   kubectl get rc && \
   kubectl get pods && \
+  redis_port=`kubectl get -o yaml service/redis-master | grep -o "nodePort: [0-9]*" | tr -d 'nodePort: '` && \
   kubectl create -f ./kube/frontend-service.yaml && \
   kubectl get services && \
+  sed -i "s/EXPOSED_PORT/$redis_port/" kube/frontend-controller.yaml && \
   kubectl create -f ./kube/frontend-controller.yaml && \
   kubectl get rc && \
   kubectl get pods -l tier
