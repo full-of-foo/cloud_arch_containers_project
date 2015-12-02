@@ -1,5 +1,4 @@
 www:
-  #build: www
   image: toeknee/trainingwheels
   expose:
     - "5000"
