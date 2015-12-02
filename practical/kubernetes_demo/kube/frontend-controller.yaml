@@ -28,9 +28,7 @@ spec:
         env:
         - name: GET_HOSTS_FROM
           value: env
-        - name: "DEBUG"
-          value: "True"
-        - name: "PUBLIC_REDIS_PORT"
-          value: "EXPOSED_PORT"
+    #    - name: "PUBLIC_REDIS_PORT"
+    #      value: "EXPOSED_PORT"
         ports:
         - containerPort: 5000
