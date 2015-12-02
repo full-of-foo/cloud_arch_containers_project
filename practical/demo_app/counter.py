@@ -9,8 +9,7 @@ import socket
 
 app = Flask(__name__)
 hostname = socket.gethostname()
-redis = redis.Redis(os.environ.get("REDIS_MASTER_SERVICE_HOST", "redis"),
-                    os.environ.get("PUBLIC_REDIS_PORT", "6379"))
+redis = redis.Redis(os.environ.get("REDIS_MASTER_SERVICE_HOST", "redis"))
 
 
 if "DEBUG" in os.environ:
