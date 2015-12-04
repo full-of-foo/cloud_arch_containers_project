@@ -9,7 +9,7 @@ import socket
 
 app = Flask(__name__)
 hostname = socket.gethostname()
-redis = redis.Redis("redis")
+redis = redis.Redis(os.environ.get("REDIS_MASTER_SERVICE_HOST", "redis"))
 
 
 if "DEBUG" in os.environ:
@@ -41,4 +41,3 @@ def assets(path):
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0")
-
