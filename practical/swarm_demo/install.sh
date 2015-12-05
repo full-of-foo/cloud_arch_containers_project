@@ -5,7 +5,8 @@
 #
 # USAGE: chmod +x ./install.sh && ./install.sh
 #
-# DESCRIPTION: TODO
+# DESCRIPTION: Tears down an existing Swarm hosts and
+#              provisions a fresh cluster.
 
 #===================================================================================
 

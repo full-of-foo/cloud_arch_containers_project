@@ -200,7 +200,7 @@ Unlike a naming convection using ID’s, labels do not provide uniqueness, many 
 Network services provide the communication of not just pods but the communication between clusters. Communication within a Kubernetes cluster happens through a rigorous API that is accessed via the kubectl tool and kube-proxy. On node initialize kubectl is placed on every node while kube-proxy facilitates a kubernetes service abstraction by maintaining network rules on the host and performing connection forwarding. Kubelet manages pods their children, their images and their volumes.
 
 \section{Conclusions}
-Swarm provides a tightly coupled integration for docker based containers used in orchestration. If creating a small number of containers this would appear to the be the best implementation path. While Kubernetes is feature rich, complexity and understanding of it internal operations are key in garnering the most from the framework. While Kubernetes is complex the overriding factor for auto deployment and self-healing, for orchestration of micro-services in a way that you are not bounded to docker/swarm, Kubernetes provides a viable alternative.
+Swarm provides a tightly coupled integration for Docker-based containers used in orchestration. When creating a small number of Docker containers this would appear to the be the best implementation path. While Kubernetes is feature rich, complexity and understanding of it internal operations are key in garnering the most from the framework. While Kubernetes is complex the overriding factor of auto deployments and self-healing, for orchestration of micro-services in a way that you are not bounded to the Docker platorm, Kubernetes provides a viable alternative.
 
 \vspace{-7.5mm}
 \renewcommand{\refname}{\section{References}}
