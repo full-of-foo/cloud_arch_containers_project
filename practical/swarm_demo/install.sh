@@ -62,14 +62,13 @@ function start_services {
 }
 
 function teardown_swarm_machines {
-  echo "Removing old Swarm machines..."
-  docker-machine status keystore && docker-machine rm -f keystore
-  docker-machine status swarm-master && docker-machine rm -f swarm-master
-  docker-machine status swarm-node-01 && docker-machine rm -f swarm-node-01
-  docker-machine status swarm-node-02 && docker-machine rm -f swarm-node-02
+    echo "Removing old Swarm machines..."
+    docker-machine status keystore && docker-machine rm -f keystore
+    docker-machine status swarm-master && docker-machine rm -f swarm-master
+    docker-machine status swarm-node-01 && docker-machine rm -f swarm-node-01
+    docker-machine status swarm-node-02 && docker-machine rm -f swarm-node-02
 }
 
 teardown_swarm_machines
 provision_machines
 start_services
-read a

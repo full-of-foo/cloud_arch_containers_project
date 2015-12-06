@@ -3,22 +3,23 @@
 #
 # FILE: auto_lb.sh
 #
-# USAGE: ./auto_lb.sh
+# USAGE: chmod +x ./auto_lb.sh && ./auto_lb.sh
 #
-# DESCRIPTION: Auto configure and recreate the load balancer
+# DESCRIPTION: Auto configure and recreate the load balancer (requires ./install.sh
+#              being ran first).
 #
 #===================================================================================
 
 VM=swarm-master
 
 function connectswarm {
-	echo "Connecting to swarm environment..."
+    echo "Connecting to swarm environment..."
     eval "$(docker-machine env --swarm $VM)"
 }
 
 function teardown {
-	echo "Tearing down old load balancer..."
-	docker-compose -f lb.yml stop && docker-compose -f lb.yml rm --force
+    echo "Tearing down old load balancer..."
+    docker-compose -f lb.yml stop && docker-compose -f lb.yml rm --force
 }
 
 function auto_loadbalance {
@@ -39,4 +40,3 @@ function auto_loadbalance {
 connectswarm
 teardown
 auto_loadbalance
-read a
