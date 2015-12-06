@@ -5,7 +5,8 @@
 #
 # USAGE: ./auto_lb.sh
 #
-# DESCRIPTION: Auto configure and recreate the load balancer
+# DESCRIPTION: Auto-configures and recreates the load balancer container for the
+#              CA674 demo app.
 #
 #===================================================================================
 
