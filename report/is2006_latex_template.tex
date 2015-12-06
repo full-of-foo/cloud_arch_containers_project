@@ -92,11 +92,12 @@ Its pluggable driver API currently supports ``provisioning Docker locally with V
 \item \textbf{Docker Swarm} is a clustering solution which takes the standard 
 ``Docker Engine and extends it to enable you to work on a cluster of containers". 
 This in turn allows one to ``manage a resource pool of Docker hosts and schedule
-containers to run transparently on top, automatically managing workload and providing fail-over services", whereby you can specify how each container is to be ran in the cluster, in turn allowing one to orchestrate and choreograph local or cloud containers.
+containers to run transparently on top, automatically managing workload and providing fail-over services". Through the Swarm interface 
+you simply specify how each container is to be ran in the cluster, which in turn allowing for the orchestration and choreographing of local or cloud containers \citep{holla}.
 \item \textbf{Docker Compose} is the ``glue" allowing one to configure relationships between containers (called links) and define within a single configuration file a full container based application and it's interdependencies, along with resource needs (like memory or disk).
 \end{itemize}
-\noindent In many cases an existing cloud infrastructure depends upon one or more orchestration tools, for example 
-Consul for service discovery. Typically, such tools cannot be migrated away from easily and in turn cause ``vendor lock-in".
+\noindent In many cases an existing cloud infrastructure depends upon one or more provisioning and/or orchestration tools like 
+Puppet, Chef or Ansible. Typically, such tools cannot be migrated away from easily and in turn cause ``vendor lock-in".
 Consequently, Docker have implemented this trio of orchestration tools in a generic way, 
 providing ``a standard interface to service providers so that they can almost be used as plug-and-play solutions" on top of the Docker platform \citep{holla}.
 \par
